@@ -9,6 +9,13 @@ export default function Login() {
   const [erro, setErro] = useState('');
   const navigate = useNavigate();
 
+  function extrairErro(data) {
+    if (!data.detail) return 'Erro ao fazer login.';
+    if (typeof data.detail === 'string') return data.detail;
+    if (Array.isArray(data.detail)) return data.detail.map(e => e.msg).join(', ');
+    return 'Erro desconhecido.';
+  }
+
   async function handleLogin(e) {
     e.preventDefault();
     setErro('');
@@ -17,7 +24,7 @@ export default function Login() {
       localStorage.setItem('token', data.access_token);
       navigate('/agendamento');
     } else {
-      setErro(data.detail || 'Erro ao fazer login.');
+      setErro(extrairErro(data));
     }
   }
 

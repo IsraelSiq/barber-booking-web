@@ -8,6 +8,13 @@ export default function Cadastro() {
   const [erro, setErro] = useState('');
   const navigate = useNavigate();
 
+  function extrairErro(data) {
+    if (!data.detail) return 'Erro ao cadastrar.';
+    if (typeof data.detail === 'string') return data.detail;
+    if (Array.isArray(data.detail)) return data.detail.map(e => e.msg).join(', ');
+    return 'Erro desconhecido.';
+  }
+
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
@@ -19,7 +26,7 @@ export default function Cadastro() {
     if (data.id) {
       navigate('/login');
     } else {
-      setErro(data.detail || 'Erro ao cadastrar.');
+      setErro(extrairErro(data));
     }
   }
 
