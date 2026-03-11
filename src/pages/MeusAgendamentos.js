@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import {
+  Badge, Box, Button, Flex, Heading,
+  Spinner, Text, VStack, useToast
+} from '@chakra-ui/react';
 import { api } from '../api';
-import styles from './MeusAgendamentos.module.css';
 
 export default function MeusAgendamentos() {
   const [agendamentos, setAgendamentos] = useState([]);
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
+  const toast = useToast();
 
-  useEffect(() => {
-    carregarAgendamentos();
-  }, []);
+  useEffect(() => { carregar(); }, []);
 
-  async function carregarAgendamentos() {
+  async function carregar() {
     const data = await api.get('/agendamentos/meus', token);
     setAgendamentos(Array.isArray(data) ? data : []);
     setLoading(false);
@@ -22,7 +24,8 @@ export default function MeusAgendamentos() {
   async function cancelar(id) {
     if (!window.confirm('Cancelar este agendamento?')) return;
     await api.delete(`/agendamentos/${id}`, token);
-    carregarAgendamentos();
+    toast({ title: 'Agendamento cancelado.', status: 'info', duration: 2000, position: 'top' });
+    carregar();
   }
 
   function formatarData(dt) {
@@ -31,36 +34,44 @@ export default function MeusAgendamentos() {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.card}>
-        <div className={styles.header}>
-          <h1>🗓️ Meus Agendamentos</h1>
-          <Link to="/agendamento">← Novo agendamento</Link>
-        </div>
+    <Box minH="100vh" bg="gray.900" p={4}>
+      <Box maxW="520px" mx="auto">
+        <Flex justify="space-between" align="center" mb={8} pt={4}>
+          <Heading size="lg" color="red.400">✂️ Barber Booking</Heading>
+          <Box as={Link} to="/agendamento" color="gray.400" fontSize="sm" _hover={{ color: 'white' }}>← Novo agendamento</Box>
+        </Flex>
 
-        {loading && <p className={styles.info}>Carregando...</p>}
+        <Box bg="gray.800" borderRadius="2xl" p={6} boxShadow="2xl">
+          <Heading size="md" mb={6} color="white">Meus Agendamentos</Heading>
 
-        {!loading && agendamentos.length === 0 && (
-          <p className={styles.info}>Nenhum agendamento encontrado.</p>
-        )}
+          {loading && <Flex justify="center" py={8}><Spinner color="red.400" size="lg" /></Flex>}
 
-        <div className={styles.lista}>
-          {agendamentos.map(ag => (
-            <div key={ag.id} className={`${styles.item} ${ag.status === 'cancelado' ? styles.cancelado : ''}`}>
-              <div>
-                <p className={styles.servico}>{ag.servico}</p>
-                <p className={styles.data}>{formatarData(ag.data_hora)}</p>
-                <span className={`${styles.status} ${ag.status === 'cancelado' ? styles.tagCancelado : styles.tagConfirmado}`}>
-                  {ag.status}
-                </span>
-              </div>
-              {ag.status === 'confirmado' && (
-                <button onClick={() => cancelar(ag.id)} className={styles.btnCancelar}>Cancelar</button>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+          {!loading && agendamentos.length === 0 && (
+            <Text color="gray.500" textAlign="center" py={8}>Nenhum agendamento encontrado.</Text>
+          )}
+
+          <VStack spacing={3}>
+            {agendamentos.map(ag => (
+              <Flex
+                key={ag.id} w="full" bg="gray.700" borderRadius="xl" p={4}
+                justify="space-between" align="center"
+                opacity={ag.status === 'cancelado' ? 0.5 : 1}
+              >
+                <Box>
+                  <Text fontWeight="bold" fontSize="md">{ag.servico}</Text>
+                  <Text color="gray.400" fontSize="sm" mt={1}>{formatarData(ag.data_hora)}</Text>
+                  <Badge mt={2} colorScheme={ag.status === 'confirmado' ? 'green' : 'red'} borderRadius="full" px={2}>
+                    {ag.status}
+                  </Badge>
+                </Box>
+                {ag.status === 'confirmado' && (
+                  <Button size="sm" variant="outline" colorScheme="red" onClick={() => cancelar(ag.id)}>Cancelar</Button>
+                )}
+              </Flex>
+            ))}
+          </VStack>
+        </Box>
+      </Box>
+    </Box>
   );
 }
