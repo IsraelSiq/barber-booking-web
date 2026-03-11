@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   Box, Button, FormControl, FormLabel, Heading,
-  Input, Text, VStack, useToast, Icon
+  Input, Text, VStack, useToast
 } from '@chakra-ui/react';
 import { api } from '../api';
 
@@ -34,17 +34,20 @@ export default function Login() {
   }
 
   return (
-    <Box minH="100vh" bg="gray.900" display="flex" alignItems="center" justifyContent="center" p={4}>
-      <Box bg="gray.800" p={8} borderRadius="2xl" w="full" maxW="400px" boxShadow="2xl">
+    <Box minH="100vh" bg="#0a0a0a" display="flex" alignItems="center" justifyContent="center" p={4}>
+      <Box bg="#1a1a1a" p={8} borderRadius="2xl" w="full" maxW="400px" boxShadow="0 0 40px rgba(255,214,0,0.15)" border="1px solid #333">
         <VStack spacing={6}>
-          <Heading size="lg" color="red.400">✂️ Barber Booking</Heading>
-          <Heading size="md" color="gray.300" fontWeight="normal">Entrar na sua conta</Heading>
+          <Text fontSize="4xl">✂️</Text>
+          <Heading size="lg" color="brand.500" letterSpacing="wide">BARBER BOOKING</Heading>
+          <Heading size="sm" color="gray.400" fontWeight="normal">Entre na sua conta</Heading>
           <VStack as="form" onSubmit={handleLogin} spacing={4} w="full">
             <FormControl isRequired>
               <FormLabel color="gray.400" fontSize="sm">Email</FormLabel>
               <Input
                 type="email" value={email} onChange={e => setEmail(e.target.value)}
-                bg="gray.700" border="none" _focus={{ ring: 2, ringColor: 'red.400' }}
+                bg="#242424" border="1px solid #333" color="white"
+                _focus={{ borderColor: 'brand.500', boxShadow: '0 0 0 1px #ffd600' }}
+                _hover={{ borderColor: '#555' }}
                 placeholder="seu@email.com" size="lg"
               />
             </FormControl>
@@ -52,17 +55,21 @@ export default function Login() {
               <FormLabel color="gray.400" fontSize="sm">Senha</FormLabel>
               <Input
                 type="password" value={senha} onChange={e => setSenha(e.target.value)}
-                bg="gray.700" border="none" _focus={{ ring: 2, ringColor: 'red.400' }}
+                bg="#242424" border="1px solid #333" color="white"
+                _focus={{ borderColor: 'brand.500', boxShadow: '0 0 0 1px #ffd600' }}
+                _hover={{ borderColor: '#555' }}
                 placeholder="••••••••" size="lg"
               />
             </FormControl>
-            <Button type="submit" colorScheme="red" size="lg" w="full" isLoading={loading} loadingText="Entrando...">
+            <Button type="submit" bg="brand.500" color="black" size="lg" w="full"
+              isLoading={loading} loadingText="Entrando..."
+              _hover={{ bg: 'brand.400' }} _active={{ bg: 'brand.600' }} mt={2}>
               Entrar
             </Button>
           </VStack>
           <Text color="gray.500" fontSize="sm">
             Não tem conta?{' '}
-            <Box as={Link} to="/cadastro" color="red.400" fontWeight="bold">Cadastre-se</Box>
+            <Box as={Link} to="/cadastro" color="brand.500" fontWeight="bold">Cadastre-se</Box>
           </Text>
         </VStack>
       </Box>

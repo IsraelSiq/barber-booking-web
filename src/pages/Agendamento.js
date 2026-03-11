@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   Box, Button, Flex, FormControl, FormLabel,
-  Grid, Heading, Input, Select, Text, VStack, useToast, Badge
+  Grid, Heading, Input, Select, Text, VStack, useToast
 } from '@chakra-ui/react';
 import { api } from '../api';
 
@@ -38,7 +38,7 @@ export default function Agendamento() {
     const result = await api.post('/agendamentos/', { data_hora, servico }, token);
     setLoading(false);
     if (result.id) {
-      toast({ title: `Agendamento confirmado! ${data} às ${horario}`, status: 'success', duration: 4000, isClosable: true, position: 'top' });
+      toast({ title: `Agendado! ${data} às ${horario}`, status: 'success', duration: 4000, isClosable: true, position: 'top' });
       buscarHorarios();
       setHorario('');
     } else {
@@ -46,33 +46,30 @@ export default function Agendamento() {
     }
   }
 
-  function handleLogout() {
-    localStorage.removeItem('token');
-    navigate('/login');
-  }
-
   return (
-    <Box minH="100vh" bg="gray.900" p={4}>
+    <Box minH="100vh" bg="#0a0a0a" p={4}>
       <Box maxW="520px" mx="auto">
-        {/* Header */}
         <Flex justify="space-between" align="center" mb={8} pt={4}>
-          <Heading size="lg" color="red.400">✂️ Barber Booking</Heading>
+          <Heading size="lg" color="brand.500" letterSpacing="wide">✂️ BARBER BOOKING</Heading>
           <Flex gap={3} align="center">
-            <Box as={Link} to="/meus" color="gray.400" fontSize="sm" _hover={{ color: 'white' }}>Meus agendamentos</Box>
-            <Button size="sm" variant="outline" colorScheme="red" onClick={handleLogout}>Sair</Button>
+            <Box as={Link} to="/meus" color="gray.400" fontSize="sm" _hover={{ color: 'brand.500' }}>Meus agendamentos</Box>
+            <Button size="sm" variant="outline" borderColor="brand.500" color="brand.500"
+              _hover={{ bg: 'brand.500', color: 'black' }}
+              onClick={() => { localStorage.removeItem('token'); navigate('/login'); }}>Sair</Button>
           </Flex>
         </Flex>
 
-        <Box bg="gray.800" borderRadius="2xl" p={6} boxShadow="2xl">
+        <Box bg="#1a1a1a" borderRadius="2xl" p={6} boxShadow="0 0 40px rgba(255,214,0,0.1)" border="1px solid #333">
           <Heading size="md" mb={6} color="white">Novo Agendamento</Heading>
-
           <VStack spacing={5}>
             <FormControl>
               <FormLabel color="gray.400" fontSize="sm">Data</FormLabel>
               <Flex gap={3}>
                 <Input type="date" value={data} onChange={e => { setData(e.target.value); setBuscou(false); }}
-                  bg="gray.700" border="none" size="lg" flex={1} />
-                <Button onClick={buscarHorarios} colorScheme="red" size="lg" px={6} isLoading={buscando}>Buscar</Button>
+                  bg="#242424" border="1px solid #333" color="white" size="lg" flex={1}
+                  _focus={{ borderColor: 'brand.500' }} />
+                <Button onClick={buscarHorarios} bg="brand.500" color="black" size="lg" px={6}
+                  isLoading={buscando} _hover={{ bg: 'brand.400' }}>Buscar</Button>
               </Flex>
             </FormControl>
 
@@ -85,40 +82,38 @@ export default function Agendamento() {
                       const disponivel = disponiveis.includes(h);
                       const selecionado = horario === h;
                       return (
-                        <Button
-                          key={h} size="md"
+                        <Button key={h} size="md"
                           onClick={() => disponivel && setHorario(h)}
-                          colorScheme={selecionado ? 'red' : 'gray'}
-                          variant={selecionado ? 'solid' : 'outline'}
-                          opacity={disponivel ? 1 : 0.3}
+                          bg={selecionado ? 'brand.500' : '#242424'}
+                          color={selecionado ? 'black' : disponivel ? 'white' : 'gray.600'}
+                          border="1px solid"
+                          borderColor={selecionado ? 'brand.500' : disponivel ? '#444' : '#2a2a2a'}
+                          opacity={disponivel ? 1 : 0.35}
                           cursor={disponivel ? 'pointer' : 'not-allowed'}
-                          borderColor={disponivel && !selecionado ? 'gray.500' : undefined}
-                        >
-                          {h}
-                        </Button>
+                          _hover={disponivel && !selecionado ? { borderColor: 'brand.500', color: 'brand.500' } : {}}
+                        >{h}</Button>
                       );
                     })}
                   </Grid>
-                  {disponiveis.length === 0 && (
-                    <Text color="gray.500" fontSize="sm" mt={2}>Nenhum horário disponível nesta data.</Text>
-                  )}
+                  {disponiveis.length === 0 && <Text color="gray.500" fontSize="sm" mt={2}>Nenhum horário disponível.</Text>}
                 </FormControl>
 
                 {disponiveis.length > 0 && (
                   <>
                     <FormControl>
                       <FormLabel color="gray.400" fontSize="sm">Serviço</FormLabel>
-                      <Select value={servico} onChange={e => setServico(e.target.value)} bg="gray.700" border="none" size="lg">
-                        <option>Corte</option>
-                        <option>Barba</option>
-                        <option>Corte + Barba</option>
-                        <option>Sobrancelha</option>
+                      <Select value={servico} onChange={e => setServico(e.target.value)}
+                        bg="#242424" border="1px solid #333" color="white" size="lg"
+                        _focus={{ borderColor: 'brand.500' }}>
+                        <option style={{background:'#242424'}}>Corte</option>
+                        <option style={{background:'#242424'}}>Barba</option>
+                        <option style={{background:'#242424'}}>Corte + Barba</option>
+                        <option style={{background:'#242424'}}>Sobrancelha</option>
                       </Select>
                     </FormControl>
-                    <Button
-                      onClick={handleAgendar} colorScheme="red" size="lg" w="full"
+                    <Button onClick={handleAgendar} bg="brand.500" color="black" size="lg" w="full"
                       isLoading={loading} loadingText="Confirmando..." isDisabled={!horario}
-                    >
+                      _hover={{ bg: 'brand.400' }} _disabled={{ opacity: 0.4 }}>
                       Confirmar Agendamento
                     </Button>
                   </>

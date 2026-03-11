@@ -7,18 +7,35 @@ const theme = extendTheme({
   config: { initialColorMode: 'dark', useSystemColorMode: false },
   styles: {
     global: {
-      body: { bg: 'gray.900', color: 'white' }
+      body: { bg: 'gray.950', color: 'white' }
     }
   },
   colors: {
+    gray: {
+      950: '#0a0a0a',
+      900: '#111111',
+      800: '#1a1a1a',
+      700: '#242424',
+      600: '#333333',
+      500: '#555555',
+      400: '#888888',
+      300: '#aaaaaa',
+    },
     brand: {
-      500: '#e94560',
-      600: '#c73652',
+      50:  '#fffde7',
+      100: '#fff9c4',
+      200: '#fff176',
+      300: '#ffee58',
+      400: '#ffeb3b',
+      500: '#ffd600',
+      600: '#ffab00',
+      700: '#ff8f00',
     }
   },
   components: {
     Button: {
-      defaultProps: { colorScheme: 'brand' }
+      defaultProps: { colorScheme: 'brand' },
+      baseStyle: { fontWeight: 'bold' }
     }
   }
 });
