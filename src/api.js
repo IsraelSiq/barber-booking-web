@@ -12,6 +12,17 @@ export const api = {
     return res.json();
   },
 
+  async postForm(path, body) {
+    const form = new URLSearchParams();
+    Object.entries(body).forEach(([k, v]) => form.append(k, v));
+    const res = await fetch(`${BASE_URL}${path}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: form.toString(),
+    });
+    return res.json();
+  },
+
   async get(path, token = null) {
     const headers = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;

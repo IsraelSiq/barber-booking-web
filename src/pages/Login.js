@@ -19,7 +19,8 @@ export default function Login() {
   async function handleLogin(e) {
     e.preventDefault();
     setErro('');
-    const data = await api.post('/auth/login', { email, senha });
+    // OAuth2PasswordRequestForm espera username + password como form-data
+    const data = await api.postForm('/auth/login', { username: email, password: senha });
     if (data.access_token) {
       localStorage.setItem('token', data.access_token);
       navigate('/agendamento');
