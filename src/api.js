@@ -30,6 +30,17 @@ export const api = {
     return res.json();
   },
 
+  async put(path, body, token = null) {
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    const res = await fetch(`${BASE_URL}${path}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(body),
+    });
+    return res.json();
+  },
+
   async delete(path, token) {
     const res = await fetch(`${BASE_URL}${path}`, {
       method: 'DELETE',
