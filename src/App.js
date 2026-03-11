@@ -7,6 +7,7 @@ import Agendamento from './pages/Agendamento';
 import MeusAgendamentos from './pages/MeusAgendamentos';
 import Enderecos from './pages/Enderecos';
 import Perfil from './pages/Perfil';
+import PainelBarbeiro from './pages/PainelBarbeiro';
 
 function App() {
   const token = localStorage.getItem('token');
@@ -21,6 +22,7 @@ function App() {
         <Route path="/meus" element={token ? <MeusAgendamentos /> : <Navigate to="/login" />} />
         <Route path="/enderecos" element={token ? <Enderecos /> : <Navigate to="/login" />} />
         <Route path="/perfil" element={token ? <Perfil /> : <Navigate to="/login" />} />
+        <Route path="/barbeiro" element={token ? <PainelBarbeiro /> : <Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>
   );

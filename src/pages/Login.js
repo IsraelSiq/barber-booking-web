@@ -27,7 +27,13 @@ export default function Login() {
     setLoading(false);
     if (data.access_token) {
       localStorage.setItem('token', data.access_token);
-      navigate('/agendamento');
+      // Busca role do usuário para redirecionar
+      const me = await api.get('/auth/me', data.access_token);
+      if (me.role === 'admin') {
+        navigate('/barbeiro');
+      } else {
+        navigate('/inicio');
+      }
     } else {
       toast({ title: extrairErro(data), status: 'error', duration: 3000, isClosable: true, position: 'top' });
     }
@@ -43,23 +49,17 @@ export default function Login() {
           <VStack as="form" onSubmit={handleLogin} spacing={4} w="full">
             <FormControl isRequired>
               <FormLabel color="gray.400" fontSize="sm">Email</FormLabel>
-              <Input
-                type="email" value={email} onChange={e => setEmail(e.target.value)}
+              <Input type="email" value={email} onChange={e => setEmail(e.target.value)}
                 bg="#242424" border="1px solid #333" color="white"
                 _focus={{ borderColor: 'brand.500', boxShadow: '0 0 0 1px #ffd600' }}
-                _hover={{ borderColor: '#555' }}
-                placeholder="seu@email.com" size="lg"
-              />
+                _hover={{ borderColor: '#555' }} placeholder="seu@email.com" size="lg" />
             </FormControl>
             <FormControl isRequired>
               <FormLabel color="gray.400" fontSize="sm">Senha</FormLabel>
-              <Input
-                type="password" value={senha} onChange={e => setSenha(e.target.value)}
+              <Input type="password" value={senha} onChange={e => setSenha(e.target.value)}
                 bg="#242424" border="1px solid #333" color="white"
                 _focus={{ borderColor: 'brand.500', boxShadow: '0 0 0 1px #ffd600' }}
-                _hover={{ borderColor: '#555' }}
-                placeholder="••••••••" size="lg"
-              />
+                _hover={{ borderColor: '#555' }} placeholder="••••••••" size="lg" />
             </FormControl>
             <Button type="submit" bg="brand.500" color="black" size="lg" w="full"
               isLoading={loading} loadingText="Entrando..."
