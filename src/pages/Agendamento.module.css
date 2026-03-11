@@ -1,0 +1,162 @@
+.container {
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  min-height: 100vh;
+}
+
+.card {
+  background: #16213e;
+  border-radius: 12px;
+  padding: 40px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  height: fit-content;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.header h1 {
+  color: #e94560;
+  font-size: 1.5rem;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.9rem;
+}
+
+.logout {
+  background: none;
+  border: 1px solid #e94560;
+  color: #e94560;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.grupo {
+  margin-bottom: 20px;
+}
+
+.grupo label {
+  display: block;
+  color: #aaa;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+
+.grupo input, .grupo select {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #0f3460;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+}
+
+.grupo input:focus, .grupo select:focus {
+  border-color: #e94560;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+}
+
+.row input {
+  flex: 1;
+}
+
+.row button {
+  padding: 10px 18px;
+  background: #0f3460;
+  color: #fff;
+  border: 1px solid #e94560;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.row button:hover {
+  background: #e94560;
+}
+
+.horarios {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.horario {
+  padding: 10px;
+  background: #0f3460;
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.horario:hover:not(.ocupado) {
+  border-color: #e94560;
+}
+
+.selecionado {
+  background: #e94560 !important;
+  border-color: #e94560 !important;
+}
+
+.ocupado {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.btnAgendar {
+  width: 100%;
+  padding: 14px;
+  background: #e94560;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+
+.btnAgendar:hover {
+  background: #c73652;
+}
+
+.sucesso {
+  color: #4caf50;
+  text-align: center;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.erro {
+  color: #e94560;
+  text-align: center;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.info {
+  color: #aaa;
+  text-align: center;
+  margin-top: 20px;
+}
