@@ -21,9 +21,7 @@ export const api = {
     try {
       const res = await fetchComTimeout(`${BASE_URL}${path}`, { method: 'POST', headers, body: JSON.stringify(body) });
       return res.json();
-    } catch (err) {
-      return { detail: err.message };
-    }
+    } catch (err) { return { detail: err.message }; }
   },
 
   async postForm(path, body) {
@@ -36,9 +34,7 @@ export const api = {
         body: form.toString(),
       });
       return res.json();
-    } catch (err) {
-      return { detail: err.message };
-    }
+    } catch (err) { return { detail: err.message }; }
   },
 
   async get(path, token = null) {
@@ -47,9 +43,7 @@ export const api = {
     try {
       const res = await fetchComTimeout(`${BASE_URL}${path}`, { headers });
       return res.json();
-    } catch (err) {
-      return { detail: err.message };
-    }
+    } catch (err) { return { detail: err.message }; }
   },
 
   async put(path, body, token = null) {
@@ -58,9 +52,16 @@ export const api = {
     try {
       const res = await fetchComTimeout(`${BASE_URL}${path}`, { method: 'PUT', headers, body: JSON.stringify(body) });
       return res.json();
-    } catch (err) {
-      return { detail: err.message };
-    }
+    } catch (err) { return { detail: err.message }; }
+  },
+
+  async patch(path, body, token = null) {
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    try {
+      const res = await fetchComTimeout(`${BASE_URL}${path}`, { method: 'PATCH', headers, body: JSON.stringify(body) });
+      return res.json();
+    } catch (err) { return { detail: err.message }; }
   },
 
   async delete(path, token) {
@@ -70,8 +71,6 @@ export const api = {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       return res.json();
-    } catch (err) {
-      return { detail: err.message };
-    }
+    } catch (err) { return { detail: err.message }; }
   }
 };
