@@ -22,7 +22,14 @@ export default function PainelBarbeiro() {
   const [loading, setLoading] = useState(false);
   const [agSelecionado, setAgSelecionado] = useState(null);
   const [motivo, setMotivo] = useState('');
+  const [resetandoId, setResetandoId] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isResetOpen,
+    onOpen: onResetOpen,
+    onClose: onResetClose
+  } = useDisclosure();
+  const [clienteReset, setClienteReset] = useState(null);
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
   const toast = useToast();
@@ -85,6 +92,28 @@ export default function PainelBarbeiro() {
     toast({ title: 'Bloqueio removido.', status: 'success', duration: 2000, position: 'top' });
     carregarBloqueios();
     carregarAgenda();
+  }
+
+  function abrirReset(cliente) {
+    setClienteReset(cliente);
+    onResetOpen();
+  }
+
+  async function confirmarReset() {
+    setResetandoId(clienteReset.id);
+    const res = await api.post(`/admin/clientes/${clienteReset.id}/reset-senha`, {}, token);
+    setResetandoId(null);
+    onResetClose();
+    if (res.detail) {
+      toast({ title: typeof res.detail === 'string' ? res.detail : 'Erro ao resetar senha.', status: 'error', duration: 3000, position: 'top' });
+    } else {
+      toast({
+        title: 'Senha resetada!',
+        description: `${clienteReset.nome} deverá criar uma nova senha no próximo login.`,
+        status: 'success', duration: 4000, isClosable: true, position: 'top'
+      });
+      carregarClientes();
+    }
   }
 
   function logout() {
@@ -222,9 +251,29 @@ export default function PainelBarbeiro() {
             <Text color="gray.500" fontSize="sm">{clientes.length} cliente(s) cadastrado(s)</Text>
             {clientes.map(c => (
               <Box key={c.id} {...cardStyle} py={4}>
-                <Text color="white" fontWeight="bold">{c.nome}</Text>
-                <Text color="gray.400" fontSize="sm">📞 {c.telefone}</Text>
-                <Text color="gray.500" fontSize="xs">{c.email}</Text>
+                <Flex justify="space-between" align="center">
+                  <Box>
+                    <Flex align="center" gap={2} mb={1}>
+                      <Text color="white" fontWeight="bold">{c.nome}</Text>
+                      {c.precisa_redefinir && (
+                        <Badge colorScheme="orange" borderRadius="full" fontSize="xs">🔒 Senha pendente</Badge>
+                      )}
+                    </Flex>
+                    <Text color="gray.400" fontSize="sm">📞 {c.telefone}</Text>
+                    <Text color="gray.500" fontSize="xs">{c.email}</Text>
+                  </Box>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    borderColor="orange.500"
+                    color="orange.400"
+                    _hover={{ bg: 'orange.500', color: 'white' }}
+                    isLoading={resetandoId === c.id}
+                    onClick={() => abrirReset(c)}
+                  >
+                    🔑 Resetar senha
+                  </Button>
+                </Flex>
               </Box>
             ))}
           </VStack>
@@ -251,6 +300,34 @@ export default function PainelBarbeiro() {
             <Button variant="ghost" color="gray.400" onClick={onClose}>Voltar</Button>
             <Button bg="red.600" color="white" _hover={{ bg: 'red.500' }} onClick={confirmarCancelar}>
               Confirmar cancelamento
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* Modal reset de senha */}
+      <Modal isOpen={isResetOpen} onClose={onResetClose} isCentered>
+        <ModalOverlay bg="blackAlpha.800" />
+        <ModalContent bg="#1a1a1a" border="1px solid #333" borderRadius="2xl" mx={4}>
+          <ModalHeader color="white">🔑 Resetar senha</ModalHeader>
+          <ModalBody>
+            <Text color="gray.400" fontSize="sm">
+              Tem certeza que deseja resetar a senha de{' '}
+              <Text as="span" color="white" fontWeight="bold">{clienteReset?.nome}</Text>?
+            </Text>
+            <Box mt={3} bg="#242424" border="1px solid #ffd600" borderRadius="lg" p={3}>
+              <Text color="brand.500" fontSize="xs" fontWeight="bold">⚠️ O que vai acontecer:</Text>
+              <Text color="gray.400" fontSize="xs" mt={1}>
+                A senha será definida como <Text as="span" color="white" fontWeight="bold">teste123</Text> e o cliente será obrigado a criar uma nova senha no próximo login.
+              </Text>
+            </Box>
+          </ModalBody>
+          <ModalFooter gap={3}>
+            <Button variant="ghost" color="gray.400" onClick={onResetClose}>Cancelar</Button>
+            <Button bg="orange.500" color="white" _hover={{ bg: 'orange.400' }}
+              isLoading={resetandoId === clienteReset?.id}
+              onClick={confirmarReset}>
+              Confirmar reset
             </Button>
           </ModalFooter>
         </ModalContent>
