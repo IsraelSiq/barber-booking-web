@@ -27,7 +27,10 @@ export default function Login() {
     setLoading(false);
     if (data.access_token) {
       localStorage.setItem('token', data.access_token);
-      // Busca role do usuário para redirecionar
+      if (data.precisa_redefinir) {
+        navigate('/redefinir-senha');
+        return;
+      }
       const me = await api.get('/auth/me', data.access_token);
       if (me.role === 'admin') {
         navigate('/barbeiro');
@@ -67,6 +70,10 @@ export default function Login() {
               Entrar
             </Button>
           </VStack>
+          <Text color="gray.500" fontSize="sm">
+            Esqueceu a senha?{' '}
+            <Box as={Link} to="/forgot-password" color="brand.500" fontWeight="bold">Recuperar</Box>
+          </Text>
           <Text color="gray.500" fontSize="sm">
             Não tem conta?{' '}
             <Box as={Link} to="/cadastro" color="brand.500" fontWeight="bold">Cadastre-se</Box>

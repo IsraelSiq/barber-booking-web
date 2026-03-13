@@ -8,6 +8,9 @@ import MeusAgendamentos from './pages/MeusAgendamentos';
 import Enderecos from './pages/Enderecos';
 import Perfil from './pages/Perfil';
 import PainelBarbeiro from './pages/PainelBarbeiro';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import RedefinirSenha from './pages/RedefinirSenha';
 
 function App() {
   const token = localStorage.getItem('token');
@@ -17,6 +20,9 @@ function App() {
         <Route path="/" element={token ? <Navigate to="/inicio" /> : <Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/redefinir-senha" element={token ? <RedefinirSenha /> : <Navigate to="/login" />} />
         <Route path="/inicio" element={token ? <Inicio /> : <Navigate to="/login" />} />
         <Route path="/agendamento" element={token ? <Agendamento /> : <Navigate to="/login" />} />
         <Route path="/meus" element={token ? <MeusAgendamentos /> : <Navigate to="/login" />} />
