@@ -36,8 +36,17 @@ export default function Perfil() {
   }
 
   const inputStyle = {
-    bg: '#242424', border: '1px solid #333', color: 'white', size: 'lg',
-    _focus: { borderColor: 'brand.500' }, _hover: { borderColor: '#555' }
+    bg: '#141414',
+    border: '1px solid #333',
+    color: 'white',
+    size: 'lg',
+    _focus: {
+      borderColor: 'brand.500',
+      boxShadow: '0 0 0 1px #ffd600, 0 0 12px rgba(255,214,0,0.35)'
+    },
+    _hover: { borderColor: '#555' },
+    _placeholder: { color: 'gray.600' },
+    transition: 'all 0.2s ease'
   };
 
   if (!usuario) return <Flex minH="100vh" bg="#0a0a0a" align="center" justify="center"><Spinner color="brand.500" size="xl" /></Flex>;
@@ -46,7 +55,13 @@ export default function Perfil() {
     <Box minH="100vh" bg="#0a0a0a" p={4}>
       <Box maxW="520px" mx="auto">
         <Navbar />
-        <Box bg="#1a1a1a" borderRadius="2xl" p={6} border="1px solid #333" boxShadow="0 0 40px rgba(255,214,0,0.1)">
+        <Box
+          bg="#111111"
+          borderRadius="2xl"
+          p={6}
+          border="1px solid #262626"
+          boxShadow="0 0 40px rgba(0,0,0,0.85)"
+        >
           <Heading size="md" color="white" mb={6}>Meu Perfil</Heading>
           <VStack as="form" onSubmit={handleSalvar} spacing={4}>
             <FormControl isRequired>
@@ -59,10 +74,27 @@ export default function Perfil() {
             </FormControl>
             <FormControl>
               <FormLabel color="gray.400" fontSize="sm">Email</FormLabel>
-              <Input value={usuario.email} isReadOnly bg="#1a1a1a" border="1px solid #222" color="gray.500" size="lg" />
+              <Input
+                value={usuario.email}
+                isReadOnly
+                bg="#111111"
+                border="1px solid #222"
+                color="gray.500"
+                size="lg"
+              />
             </FormControl>
-            <Button type="submit" bg="brand.500" color="black" w="full" size="lg"
-              isLoading={salvando} loadingText="Salvando..." _hover={{ bg: 'brand.400' }} mt={2}>
+            <Button
+              type="submit"
+              bg="brand.500"
+              color="black"
+              w="full"
+              size="lg"
+              isLoading={salvando}
+              loadingText="Salvando..."
+              mt={2}
+              borderRadius="full"
+              _hover={{ bg: 'brand.400', boxShadow: '0 0 18px rgba(255,214,0,0.4)' }}
+            >
               Salvar Alterações
             </Button>
           </VStack>

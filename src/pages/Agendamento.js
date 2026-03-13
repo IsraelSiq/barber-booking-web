@@ -57,17 +57,36 @@ export default function Agendamento() {
     }
   }
 
-  const inputStyle = { bg: '#242424', border: '1px solid #333', color: 'white', _focus: { borderColor: 'brand.500' } };
+  const inputStyle = {
+    bg: '#141414',
+    border: '1px solid #333',
+    color: 'white',
+    _focus: {
+      borderColor: 'brand.500',
+      boxShadow: '0 0 0 1px #ffd600, 0 0 12px rgba(255,214,0,0.35)'
+    },
+    _hover: { borderColor: '#555' },
+    _placeholder: { color: 'gray.600' },
+    transition: 'all 0.2s ease'
+  };
 
   if (enderecos.length === 0) return (
     <Box minH="100vh" bg="#0a0a0a" p={4}>
       <Box maxW="520px" mx="auto">
         <Navbar />
-        <Box bg="#1a1a1a" borderRadius="2xl" p={8} border="1px solid #333" textAlign="center">
-          <Text fontSize="3xl" mb={4}>📍</Text>
+        <Box bg="#0a0a0a" borderRadius="2xl" p={8} border="1px solid #333" textAlign="center" boxShadow="0 0 40px rgba(0,0,0,0.85)">
           <Heading size="md" color="white" mb={2}>Nenhum endereço cadastrado</Heading>
           <Text color="gray.400" mb={6}>Você precisa ter ao menos um endereço salvo para fazer um agendamento.</Text>
-          <Button as={Link} to="/enderecos" bg="brand.500" color="black" _hover={{ bg: 'brand.400' }}>Adicionar Endereço</Button>
+          <Button
+            as={Link}
+            to="/enderecos"
+            bg="brand.500"
+            color="black"
+            borderRadius="full"
+            _hover={{ bg: 'brand.400', boxShadow: '0 0 18px rgba(255,214,0,0.4)' }}
+          >
+            Adicionar endereço
+          </Button>
         </Box>
       </Box>
     </Box>
@@ -77,7 +96,13 @@ export default function Agendamento() {
     <Box minH="100vh" bg="#0a0a0a" p={4}>
       <Box maxW="520px" mx="auto">
         <Navbar />
-        <Box bg="#1a1a1a" borderRadius="2xl" p={6} boxShadow="0 0 40px rgba(255,214,0,0.1)" border="1px solid #333">
+        <Box
+          bg="#111111"
+          borderRadius="2xl"
+          p={6}
+          boxShadow="0 0 40px rgba(0,0,0,0.85)"
+          border="1px solid #262626"
+        >
           <Heading size="md" mb={6} color="white">Novo Agendamento</Heading>
           <VStack spacing={5}>
 
@@ -98,8 +123,18 @@ export default function Agendamento() {
               <Flex gap={3}>
                 <Input type="date" value={data} onChange={e => { setData(e.target.value); setBuscou(false); }}
                   {...inputStyle} size="lg" flex={1} />
-                <Button onClick={buscarHorarios} bg="brand.500" color="black" size="lg" px={6}
-                  isLoading={buscando} _hover={{ bg: 'brand.400' }}>Buscar</Button>
+                <Button
+                  onClick={buscarHorarios}
+                  bg="brand.500"
+                  color="black"
+                  size="lg"
+                  px={6}
+                  borderRadius="full"
+                  isLoading={buscando}
+                  _hover={{ bg: 'brand.400', boxShadow: '0 0 18px rgba(255,214,0,0.4)' }}
+                >
+                  Buscar
+                </Button>
               </Flex>
             </FormControl>
 
@@ -107,20 +142,31 @@ export default function Agendamento() {
               <>
                 <FormControl>
                   <FormLabel color="gray.400" fontSize="sm">Horário</FormLabel>
-                  <Grid templateColumns="repeat(4, 1fr)" gap={2}>
+                  <Grid templateColumns={{ base: 'repeat(3, 1fr)', sm: 'repeat(4, 1fr)' }} gap={2}>
                     {HORARIOS.map(h => {
                       const disponivel = disponiveis.includes(h);
                       const selecionado = horario === h;
                       return (
-                        <Button key={h} size="md"
+                        <Button
+                          key={h}
+                          size="md"
                           onClick={() => disponivel && setHorario(h)}
-                          bg={selecionado ? 'brand.500' : '#242424'}
+                          bg={selecionado ? 'brand.500' : '#141414'}
                           color={selecionado ? 'black' : disponivel ? 'white' : 'gray.600'}
                           border="1px solid"
                           borderColor={selecionado ? 'brand.500' : disponivel ? '#444' : '#2a2a2a'}
                           opacity={disponivel ? 1 : 0.35}
                           cursor={disponivel ? 'pointer' : 'not-allowed'}
-                          _hover={disponivel && !selecionado ? { borderColor: 'brand.500', color: 'brand.500' } : {}}
+                          _hover={
+                            disponivel && !selecionado
+                              ? {
+                                  borderColor: 'brand.500',
+                                  color: 'brand.500',
+                                  boxShadow: '0 0 14px rgba(255,214,0,0.35)'
+                                }
+                              : {}
+                          }
+                          transition="all 0.18s ease"
                         >{h}</Button>
                       );
                     })}
@@ -140,9 +186,19 @@ export default function Agendamento() {
                         <option style={{ background: '#242424' }}>Sobrancelha</option>
                       </Select>
                     </FormControl>
-                    <Button onClick={handleAgendar} bg="brand.500" color="black" size="lg" w="full"
-                      isLoading={loading} loadingText="Confirmando..." isDisabled={!horario || !enderecoId}
-                      _hover={{ bg: 'brand.400' }} _disabled={{ opacity: 0.4 }}>
+                    <Button
+                      onClick={handleAgendar}
+                      bg="brand.500"
+                      color="black"
+                      size="lg"
+                      w="full"
+                      borderRadius="full"
+                      isLoading={loading}
+                      loadingText="Confirmando..."
+                      isDisabled={!horario || !enderecoId}
+                      _hover={{ bg: 'brand.400', boxShadow: '0 0 20px rgba(255,214,0,0.45)' }}
+                      _disabled={{ opacity: 0.4, cursor: 'not-allowed', boxShadow: 'none' }}
+                    >
                       Confirmar Agendamento
                     </Button>
                   </>

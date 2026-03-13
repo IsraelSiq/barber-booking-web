@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
   Box, Button, FormControl, FormLabel, Heading,
-  Input, Text, VStack, useToast, Spinner
+  Input, Text, VStack, useToast, Spinner, Flex
 } from '@chakra-ui/react';
 import { api } from '../api';
 
@@ -59,26 +59,56 @@ export default function ResetPassword() {
 
   return (
     <Box minH="100vh" bg="#0a0a0a" display="flex" alignItems="center" justifyContent="center" p={4}>
-      <Box bg="#1a1a1a" p={8} borderRadius="2xl" w="full" maxW="400px"
-        boxShadow="0 0 40px rgba(255,214,0,0.15)" border="1px solid #333">
-        <VStack spacing={6}>
-          <Text fontSize="4xl">🔒</Text>
-          <Heading size="lg" color="brand.500" letterSpacing="wide">NOVA SENHA</Heading>
+      <Box
+        bg="linear-gradient(135deg, rgba(255,214,0,0.08), transparent)"
+        borderRadius="3xl"
+        w="full"
+        maxW="420px"
+        p="1px"
+      >
+        <Box
+          bg="#0a0a0a"
+          borderRadius="3xl"
+          p={{ base: 6, md: 8 }}
+          boxShadow="0 0 40px rgba(0,0,0,0.85)"
+          border="1px solid #262626"
+        >
+          <VStack spacing={6}>
+            <Flex direction="column" align="center" textAlign="center">
+              <Box
+                mb={3}
+                borderRadius="full"
+                border="1px solid rgba(255,214,0,0.5)"
+                px={4}
+                py={1}
+                fontSize="xs"
+                letterSpacing="0.18em"
+                textTransform="uppercase"
+                color="gray.400"
+              >
+                Segurança da conta
+              </Box>
+              <Heading size="md" color="white" letterSpacing="wide">
+                Defina uma nova senha
+              </Heading>
+            </Flex>
+
           {!tokenValido ? (
             <VStack spacing={4} w="full">
-              <Box bg="#242424" border="1px solid #e53e3e" borderRadius="lg" p={4} w="full">
+              <Box bg="#141414" border="1px solid #e53e3e" borderRadius="xl" p={4} w="full">
                 <Text color="red.400" fontWeight="bold" mb={1}>Link inválido ou expirado</Text>
                 <Text color="gray.400" fontSize="sm">Este link de redefinição de senha não é mais válido. Solicite um novo.</Text>
               </Box>
               <Button as={Link} to="/forgot-password" bg="brand.500" color="black" w="full" size="lg"
-                _hover={{ bg: 'brand.400' }}>
+                borderRadius="full"
+                _hover={{ bg: 'brand.400', boxShadow: '0 0 18px rgba(255,214,0,0.4)' }}>
                 Solicitar novo link
               </Button>
             </VStack>
           ) : sucesso ? (
             <VStack spacing={4} w="full">
-              <Box bg="#242424" border="1px solid #38a169" borderRadius="lg" p={4} w="full">
-                <Text color="green.400" fontWeight="bold" mb={1}>Senha redefinida! ✅</Text>
+              <Box bg="#141414" border="1px solid #38a169" borderRadius="xl" p={4} w="full">
+                <Text color="green.400" fontWeight="bold" mb={1}>Senha redefinida com sucesso</Text>
                 <Text color="gray.400" fontSize="sm">Você será redirecionado para o login em instantes...</Text>
               </Box>
             </VStack>
@@ -87,26 +117,63 @@ export default function ResetPassword() {
               <FormControl isRequired>
                 <FormLabel color="gray.400" fontSize="sm">Nova senha</FormLabel>
                 <Input type="password" value={novaSenha} onChange={e => setNovaSenha(e.target.value)}
-                  bg="#242424" border="1px solid #333" color="white"
-                  _focus={{ borderColor: 'brand.500', boxShadow: '0 0 0 1px #ffd600' }}
-                  _hover={{ borderColor: '#555' }} placeholder="Mínimo 6 caracteres" size="lg" />
+                  bg="#141414"
+                  border="1px solid #333"
+                  color="white"
+                  _focus={{
+                    borderColor: 'brand.500',
+                    boxShadow: '0 0 0 1px #ffd600, 0 0 12px rgba(255,214,0,0.35)'
+                  }}
+                  _hover={{ borderColor: '#555' }}
+                  _placeholder={{ color: 'gray.600' }}
+                  placeholder="Mínimo 6 caracteres"
+                  size="lg"
+                  transition="all 0.2s ease"
+                />
               </FormControl>
               <FormControl isRequired>
                 <FormLabel color="gray.400" fontSize="sm">Confirmar nova senha</FormLabel>
                 <Input type="password" value={confirmar} onChange={e => setConfirmar(e.target.value)}
-                  bg="#242424" border="1px solid #333" color="white"
-                  _focus={{ borderColor: 'brand.500', boxShadow: '0 0 0 1px #ffd600' }}
-                  _hover={{ borderColor: '#555' }} placeholder="Repita a senha" size="lg" />
+                  bg="#141414"
+                  border="1px solid #333"
+                  color="white"
+                  _focus={{
+                    borderColor: 'brand.500',
+                    boxShadow: '0 0 0 1px #ffd600, 0 0 12px rgba(255,214,0,0.35)'
+                  }}
+                  _hover={{ borderColor: '#555' }}
+                  _placeholder={{ color: 'gray.600' }}
+                  placeholder="Repita a senha"
+                  size="lg"
+                  transition="all 0.2s ease"
+                />
               </FormControl>
-              <Button type="submit" bg="brand.500" color="black" size="lg" w="full"
-                isLoading={loading} loadingText="Salvando..."
-                _hover={{ bg: 'brand.400' }} _active={{ bg: 'brand.600' }} mt={2}>
+              <Button
+                type="submit"
+                bg="brand.500"
+                color="black"
+                size="lg"
+                w="full"
+                isLoading={loading}
+                loadingText="Salvando..."
+                mt={2}
+                borderRadius="full"
+                _hover={{
+                  bg: 'brand.400',
+                  boxShadow: '0 0 18px rgba(255,214,0,0.4)',
+                  transform: 'translateY(-1px)'
+                }}
+                _active={{ bg: 'brand.600', transform: 'translateY(0)' }}
+                transition="all 0.2s ease"
+              >
                 Salvar nova senha
               </Button>
             </VStack>
           )}
         </VStack>
+        </Box>
       </Box>
     </Box>
   );
 }
+

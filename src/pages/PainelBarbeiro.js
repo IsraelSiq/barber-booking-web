@@ -140,16 +140,20 @@ export default function PainelBarbeiro() {
       <Box maxW="600px" mx="auto">
         {/* Header */}
         <Flex justify="space-between" align="center" mb={6} pt={4}>
-          <Heading size="lg" color="brand.500">✂️ Painel do Barbeiro</Heading>
+          <Heading size="lg" color="brand.500">
+            Painel do Barbeiro
+          </Heading>
           <Button size="sm" variant="outline" borderColor="brand.500" color="brand.500"
-            _hover={{ bg: 'brand.500', color: 'black' }} onClick={logout}>Sair</Button>
+            borderRadius="full"
+            _hover={{ bg: 'brand.500', color: 'black', boxShadow: '0 0 16px rgba(255,214,0,0.35)' }}
+            onClick={logout}>Sair</Button>
         </Flex>
 
         {/* Abas */}
         <HStack spacing={0} mb={6} borderBottom="1px solid #333">
-          <Button {...abaStyle(aba === 'agenda')} onClick={() => setAba('agenda')}>📅 Agenda</Button>
-          <Button {...abaStyle(aba === 'horarios')} onClick={() => setAba('horarios')}>🔒 Horários</Button>
-          <Button {...abaStyle(aba === 'clientes')} onClick={() => setAba('clientes')}>👥 Clientes</Button>
+          <Button {...abaStyle(aba === 'agenda')} onClick={() => setAba('agenda')}>Agenda</Button>
+          <Button {...abaStyle(aba === 'horarios')} onClick={() => setAba('horarios')}>Horários</Button>
+          <Button {...abaStyle(aba === 'clientes')} onClick={() => setAba('clientes')}>Clientes</Button>
         </HStack>
 
         {/* ABA AGENDA */}
@@ -157,21 +161,48 @@ export default function PainelBarbeiro() {
           <VStack spacing={4} align="stretch">
             <Flex gap={3}>
               <Input type="date" value={data} onChange={e => setData(e.target.value)}
-                bg="#242424" border="1px solid #333" color="white" flex={1}
-                _focus={{ borderColor: 'brand.500' }} />
-              <Button onClick={carregarAgenda} bg="brand.500" color="black" _hover={{ bg: 'brand.400' }}>Buscar</Button>
+                bg="#141414"
+                border="1px solid #333"
+                color="white"
+                flex={1}
+                _focus={{
+                  borderColor: 'brand.500',
+                  boxShadow: '0 0 0 1px #ffd600, 0 0 12px rgba(255,214,0,0.35)'
+                }}
+                _hover={{ borderColor: '#555' }}
+              />
+              <Button
+                onClick={carregarAgenda}
+                bg="brand.500"
+                color="black"
+                borderRadius="full"
+                _hover={{ bg: 'brand.400', boxShadow: '0 0 18px rgba(255,214,0,0.4)' }}
+              >
+                Buscar
+              </Button>
             </Flex>
 
             {loading && <Flex justify="center" py={8}><Spinner color="brand.500" size="lg" /></Flex>}
 
             {!loading && agenda.length === 0 && (
-              <Box {...cardStyle} textAlign="center">
+              <Box
+                {...cardStyle}
+                bg="#111111"
+                border="1px solid #262626"
+                textAlign="center"
+              >
                 <Text color="gray.500">Nenhum agendamento para esta data.</Text>
               </Box>
             )}
 
             {agenda.map(ag => (
-              <Box key={ag.id} {...cardStyle}>
+              <Box
+                key={ag.id}
+                {...cardStyle}
+                bg="#111111"
+                border="1px solid #262626"
+                boxShadow="0 0 40px rgba(0,0,0,0.65)"
+              >
                 <Flex justify="space-between" align="flex-start">
                   <Box flex={1}>
                     <Flex align="center" gap={3} mb={2}>
@@ -179,10 +210,10 @@ export default function PainelBarbeiro() {
                       <Badge colorScheme="yellow" borderRadius="full" px={2}>{ag.servico}</Badge>
                     </Flex>
                     <Text color="white" fontWeight="bold">{ag.cliente?.nome}</Text>
-                    <Text color="gray.400" fontSize="sm">📞 {ag.cliente?.telefone}</Text>
+                    <Text color="gray.400" fontSize="sm">{ag.cliente?.telefone}</Text>
                     {ag.endereco && (
-                      <Box mt={2} bg="#242424" borderRadius="lg" p={3}>
-                        <Text color="brand.500" fontSize="xs" fontWeight="bold">📍 {ag.endereco.apelido}</Text>
+                      <Box mt={2} bg="#141414" borderRadius="lg" p={3}>
+                        <Text color="brand.500" fontSize="xs" fontWeight="bold">{ag.endereco.apelido}</Text>
                         <Text color="gray.300" fontSize="sm">{ag.endereco.rua}, {ag.endereco.numero}</Text>
                         <Text color="gray.500" fontSize="xs">{ag.endereco.bairro} — {ag.endereco.cidade}</Text>
                         {ag.endereco.complemento && <Text color="gray.500" fontSize="xs">{ag.endereco.complemento}</Text>}
@@ -190,11 +221,24 @@ export default function PainelBarbeiro() {
                     )}
                   </Box>
                   <VStack spacing={2} ml={3}>
-                    <Button size="sm" bg="green.600" color="white" _hover={{ bg: 'green.500' }}
+                    <Button
+                      size="sm"
+                      bg="green.600"
+                      color="white"
+                      borderRadius="full"
+                      _hover={{ bg: 'green.500', boxShadow: '0 0 16px rgba(74,222,128,0.35)' }}
                       onClick={() => concluir(ag.id)}>✅ Concluir</Button>
-                    <Button size="sm" variant="outline" borderColor="red.500" color="red.400"
-                      _hover={{ bg: 'red.500', color: 'white' }}
-                      onClick={() => abrirCancelar(ag)}>❌ Cancelar</Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      borderColor="red.500"
+                      color="red.400"
+                      borderRadius="full"
+                      _hover={{ bg: 'red.500', color: 'white', boxShadow: '0 0 16px rgba(248,113,113,0.45)' }}
+                      onClick={() => abrirCancelar(ag)}
+                    >
+                      Cancelar
+                    </Button>
                   </VStack>
                 </Flex>
               </Box>
@@ -207,10 +251,22 @@ export default function PainelBarbeiro() {
           <VStack spacing={4} align="stretch">
             <Flex gap={3}>
               <Input type="date" value={data} onChange={e => setData(e.target.value)}
-                bg="#242424" border="1px solid #333" color="white" flex={1}
-                _focus={{ borderColor: 'brand.500' }} />
+                bg="#141414"
+                border="1px solid #333"
+                color="white"
+                flex={1}
+                _focus={{
+                  borderColor: 'brand.500',
+                  boxShadow: '0 0 0 1px #ffd600, 0 0 12px rgba(255,214,0,0.35)'
+                }}
+                _hover={{ borderColor: '#555' }}
+              />
             </Flex>
-            <Box {...cardStyle}>
+            <Box
+              {...cardStyle}
+              bg="#111111"
+              border="1px solid #262626"
+            >
               <Text color="gray.400" fontSize="sm" mb={4}>Clique para bloquear/desbloquear horários</Text>
               <Grid templateColumns="repeat(4, 1fr)" gap={3}>
                 {HORARIOS.map(h => {
@@ -218,8 +274,10 @@ export default function PainelBarbeiro() {
                   const bloqueado = horariosBloqueados.includes(h);
                   const bloqueioObj = bloqueiosDoDia.find(b => b.horario === h);
                   return (
-                    <Button key={h} size="md"
-                      bg={agendado ? '#1a3a1a' : bloqueado ? '#3a1a1a' : '#242424'}
+                    <Button
+                      key={h}
+                      size="md"
+                      bg={agendado ? '#1a3a1a' : bloqueado ? '#3a1a1a' : '#141414'}
                       color={agendado ? 'green.400' : bloqueado ? 'red.400' : 'gray.300'}
                       border="1px solid"
                       borderColor={agendado ? 'green.700' : bloqueado ? 'red.700' : '#444'}
@@ -229,6 +287,16 @@ export default function PainelBarbeiro() {
                         else bloquear(h);
                       }}
                       cursor={agendado ? 'not-allowed' : 'pointer'}
+                      transition="all 0.18s ease"
+                      _hover={
+                        !agendado
+                          ? {
+                              boxShadow: bloqueado
+                                ? '0 0 14px rgba(248,113,113,0.4)'
+                                : '0 0 14px rgba(255,214,0,0.35)'
+                            }
+                          : {}
+                      }
                       title={agendado ? 'Horário com agendamento' : bloqueado ? 'Clique para desbloquear' : 'Clique para bloquear'}
                     >
                       {h}
@@ -250,16 +318,22 @@ export default function PainelBarbeiro() {
           <VStack spacing={3} align="stretch">
             <Text color="gray.500" fontSize="sm">{clientes.length} cliente(s) cadastrado(s)</Text>
             {clientes.map(c => (
-              <Box key={c.id} {...cardStyle} py={4}>
+              <Box
+                key={c.id}
+                {...cardStyle}
+                bg="#111111"
+                border="1px solid #262626"
+                py={4}
+              >
                 <Flex justify="space-between" align="center">
                   <Box>
                     <Flex align="center" gap={2} mb={1}>
                       <Text color="white" fontWeight="bold">{c.nome}</Text>
                       {c.precisa_redefinir && (
-                        <Badge colorScheme="orange" borderRadius="full" fontSize="xs">🔒 Senha pendente</Badge>
+                        <Badge colorScheme="orange" borderRadius="full" fontSize="xs">Senha pendente</Badge>
                       )}
                     </Flex>
-                    <Text color="gray.400" fontSize="sm">📞 {c.telefone}</Text>
+                    <Text color="gray.400" fontSize="sm">{c.telefone}</Text>
                     <Text color="gray.500" fontSize="xs">{c.email}</Text>
                   </Box>
                   <Button
@@ -267,11 +341,12 @@ export default function PainelBarbeiro() {
                     variant="outline"
                     borderColor="orange.500"
                     color="orange.400"
-                    _hover={{ bg: 'orange.500', color: 'white' }}
+                    borderRadius="full"
+                    _hover={{ bg: 'orange.500', color: 'white', boxShadow: '0 0 16px rgba(251,146,60,0.45)' }}
                     isLoading={resetandoId === c.id}
                     onClick={() => abrirReset(c)}
                   >
-                    🔑 Resetar senha
+                    Resetar senha
                   </Button>
                 </Flex>
               </Box>
@@ -283,7 +358,7 @@ export default function PainelBarbeiro() {
       {/* Modal cancelamento */}
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay bg="blackAlpha.800" />
-        <ModalContent bg="#1a1a1a" border="1px solid #333" borderRadius="2xl" mx={4}>
+        <ModalContent bg="#111111" border="1px solid #262626" borderRadius="2xl" mx={4}>
           <ModalHeader color="white">Cancelar agendamento</ModalHeader>
           <ModalBody>
             <Text color="gray.400" fontSize="sm" mb={3}>
@@ -292,13 +367,25 @@ export default function PainelBarbeiro() {
             <Textarea
               value={motivo} onChange={e => setMotivo(e.target.value)}
               placeholder="Ex: Imprevisto pessoal, problema de saúde..."
-              bg="#242424" border="1px solid #333" color="white"
-              _focus={{ borderColor: 'brand.500' }} rows={3}
+              bg="#141414"
+              border="1px solid #333"
+              color="white"
+              _focus={{
+                borderColor: 'brand.500',
+                boxShadow: '0 0 0 1px #ffd600, 0 0 12px rgba(255,214,0,0.35)'
+              }}
+              rows={3}
             />
           </ModalBody>
           <ModalFooter gap={3}>
             <Button variant="ghost" color="gray.400" onClick={onClose}>Voltar</Button>
-            <Button bg="red.600" color="white" _hover={{ bg: 'red.500' }} onClick={confirmarCancelar}>
+            <Button
+              bg="red.600"
+              color="white"
+              borderRadius="full"
+              _hover={{ bg: 'red.500', boxShadow: '0 0 16px rgba(248,113,113,0.45)' }}
+              onClick={confirmarCancelar}
+            >
               Confirmar cancelamento
             </Button>
           </ModalFooter>
@@ -308,15 +395,15 @@ export default function PainelBarbeiro() {
       {/* Modal reset de senha */}
       <Modal isOpen={isResetOpen} onClose={onResetClose} isCentered>
         <ModalOverlay bg="blackAlpha.800" />
-        <ModalContent bg="#1a1a1a" border="1px solid #333" borderRadius="2xl" mx={4}>
-          <ModalHeader color="white">🔑 Resetar senha</ModalHeader>
+        <ModalContent bg="#111111" border="1px solid #262626" borderRadius="2xl" mx={4}>
+          <ModalHeader color="white">Resetar senha</ModalHeader>
           <ModalBody>
             <Text color="gray.400" fontSize="sm">
               Tem certeza que deseja resetar a senha de{' '}
               <Text as="span" color="white" fontWeight="bold">{clienteReset?.nome}</Text>?
             </Text>
             <Box mt={3} bg="#242424" border="1px solid #ffd600" borderRadius="lg" p={3}>
-              <Text color="brand.500" fontSize="xs" fontWeight="bold">⚠️ O que vai acontecer:</Text>
+              <Text color="brand.500" fontSize="xs" fontWeight="bold">O que vai acontecer:</Text>
               <Text color="gray.400" fontSize="xs" mt={1}>
                 A senha será definida como <Text as="span" color="white" fontWeight="bold">teste123</Text> e o cliente será obrigado a criar uma nova senha no próximo login.
               </Text>
