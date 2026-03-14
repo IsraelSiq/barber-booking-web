@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   Box, Button, FormControl, FormLabel, Heading,
-  Input, Text, VStack, useToast, Flex, Image
+  Input, Text, VStack, useToast, Flex, Image, Divider
 } from '@chakra-ui/react';
+import { GoogleLogin } from '@react-oauth/google';
 import { api } from '../api';
 import logoAlafy from '../assets/logo-alafy.png';
 
@@ -32,6 +33,18 @@ export default function Cadastro() {
     if (data.id) {
       toast({ title: 'Conta criada! Faça login.', status: 'success', duration: 3000, isClosable: true, position: 'top' });
       navigate('/login');
+    } else {
+      toast({ title: extrairErro(data), status: 'error', duration: 3000, isClosable: true, position: 'top' });
+    }
+  }
+
+  async function handleGoogleSuccess(credentialResponse) {
+    const data = await api.post('/auth/google', { credential: credentialResponse.credential });
+    if (data.access_token) {
+      localStorage.setItem('token', data.access_token);
+      const me = await api.get('/auth/me', data.access_token);
+      if (me.role === 'admin') navigate('/barbeiro');
+      else navigate('/inicio');
     } else {
       toast({ title: extrairErro(data), status: 'error', duration: 3000, isClosable: true, position: 'top' });
     }
@@ -70,68 +83,64 @@ export default function Cadastro() {
               </Text>
             </Flex>
 
-          <VStack as="form" onSubmit={handleCadastro} spacing={4} w="full">
-            {[{ label: 'Nome', name: 'nome', type: 'text', ph: 'Seu nome' },
-              { label: 'Email', name: 'email', type: 'email', ph: 'seu@email.com' },
-              { label: 'Telefone', name: 'telefone', type: 'text', ph: '(21) 99999-9999' },
-              { label: 'Senha', name: 'senha', type: 'password', ph: '••••••••' }
-            ].map(f => (
-              <FormControl key={f.name} isRequired>
-                <FormLabel color="gray.400" fontSize="sm">{f.label}</FormLabel>
-                <Input
-                  name={f.name} type={f.type} value={form[f.name]} onChange={handleChange}
-                  bg="#141414"
-                  border="1px solid #333"
-                  color="white"
-                  placeholder={f.ph}
-                  size="lg"
-                  _focus={{
-                    borderColor: 'brand.500',
-                    boxShadow: '0 0 0 1px #ffd600, 0 0 12px rgba(255,214,0,0.35)'
-                  }}
-                  _hover={{ borderColor: '#555' }}
-                  _placeholder={{ color: 'gray.600' }}
-                  transition="all 0.2s ease"
-                />
-              </FormControl>
-            ))}
-            <Button
-              type="submit"
-              bg="brand.500"
-              color="black"
-              size="lg"
-              w="full"
-              isLoading={loading}
-              loadingText="Criando..."
-              mt={2}
-              borderRadius="full"
-              _hover={{
-                bg: 'brand.400',
-                boxShadow: '0 0 18px rgba(255,214,0,0.4)',
-                transform: 'translateY(-1px)'
-              }}
-              _active={{ bg: 'brand.600', transform: 'translateY(0)' }}
-              transition="all 0.2s ease"
-            >
-              Criar conta
-            </Button>
-          </VStack>
+            {/* Botão Google */}
+            <Flex justify="center">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => toast({ title: 'Falha ao entrar com Google.', status: 'error', duration: 3000, isClosable: true, position: 'top' })}
+                theme="filled_black"
+                shape="pill"
+                size="large"
+                text="signup_with"
+                locale="pt-BR"
+              />
+            </Flex>
 
-          <VStack spacing={3} pt={4}>
-            <Text color="gray.500" fontSize="sm" textAlign="center">
-              Já tem conta?{' '}
-              <Box
-                as={Link}
-                to="/login"
-                color="brand.500"
-                fontWeight="semibold"
-                _hover={{ textDecoration: 'underline', color: 'yellow.300' }}
+            <Flex align="center" gap={3}>
+              <Divider borderColor="#333" />
+              <Text color="gray.600" fontSize="xs" whiteSpace="nowrap">ou cadastre com email</Text>
+              <Divider borderColor="#333" />
+            </Flex>
+
+            <VStack as="form" onSubmit={handleCadastro} spacing={4} w="full">
+              {[{ label: 'Nome', name: 'nome', type: 'text', ph: 'Seu nome' },
+                { label: 'Email', name: 'email', type: 'email', ph: 'seu@email.com' },
+                { label: 'Telefone', name: 'telefone', type: 'text', ph: '(21) 99999-9999' },
+                { label: 'Senha', name: 'senha', type: 'password', ph: '••••••••' }
+              ].map(f => (
+                <FormControl key={f.name} isRequired>
+                  <FormLabel color="gray.400" fontSize="sm">{f.label}</FormLabel>
+                  <Input
+                    name={f.name} type={f.type} value={form[f.name]} onChange={handleChange}
+                    bg="#141414" border="1px solid #333" color="white" placeholder={f.ph} size="lg"
+                    _focus={{ borderColor: 'brand.500', boxShadow: '0 0 0 1px #ffd600, 0 0 12px rgba(255,214,0,0.35)' }}
+                    _hover={{ borderColor: '#555' }}
+                    _placeholder={{ color: 'gray.600' }}
+                    transition="all 0.2s ease"
+                  />
+                </FormControl>
+              ))}
+              <Button
+                type="submit" bg="brand.500" color="black" size="lg" w="full"
+                isLoading={loading} loadingText="Criando..." mt={2} borderRadius="full"
+                _hover={{ bg: 'brand.400', boxShadow: '0 0 18px rgba(255,214,0,0.4)', transform: 'translateY(-1px)' }}
+                _active={{ bg: 'brand.600', transform: 'translateY(0)' }}
+                transition="all 0.2s ease"
               >
-                Entrar
-              </Box>
-            </Text>
+                Criar conta
+              </Button>
+            </VStack>
+
+            <VStack spacing={3} pt={2}>
+              <Text color="gray.500" fontSize="sm" textAlign="center">
+                Já tem conta?{' '}
+                <Box as={Link} to="/login" color="brand.500" fontWeight="semibold"
+                  _hover={{ textDecoration: 'underline', color: 'yellow.300' }}>
+                  Entrar
+                </Box>
+              </Text>
+            </VStack>
           </VStack>
-        </VStack>
         </Box>
       </Box>
     </Box>
