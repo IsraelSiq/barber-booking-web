@@ -2,25 +2,34 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Box, Button, Flex, FormControl, FormLabel,
-  Grid, Heading, Input, Select, Text, VStack, useToast, Alert, AlertIcon
+  Grid, Heading, Input, Select, Text, VStack, useToast, Badge
 } from '@chakra-ui/react';
 import { api } from '../api';
 import Navbar from '../components/Navbar';
 
 const HORARIOS = ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
 
+const SERVICOS = [
+  { nome: 'Corte',                      preco: 'R$ 20' },
+  { nome: 'Barba',                       preco: 'R$ 20' },
+  { nome: 'Corte + Barba',               preco: 'R$ 25' },
+  { nome: 'Corte + Barba + Sobrancelha', preco: 'R$ 30' },
+];
+
 export default function Agendamento() {
   const [data, setData] = useState('');
   const [disponiveis, setDisponiveis] = useState([]);
   const [buscou, setBuscou] = useState(false);
   const [horario, setHorario] = useState('');
-  const [servico, setServico] = useState('Corte');
+  const [servico, setServico] = useState(SERVICOS[0].nome);
   const [enderecoId, setEnderecoId] = useState('');
   const [enderecos, setEnderecos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [buscando, setBuscando] = useState(false);
   const token = localStorage.getItem('token');
   const toast = useToast();
+
+  const servicoSelecionado = SERVICOS.find(s => s.nome === servico);
 
   useEffect(() => {
     async function carregarEnderecos() {
@@ -159,11 +168,7 @@ export default function Agendamento() {
                           cursor={disponivel ? 'pointer' : 'not-allowed'}
                           _hover={
                             disponivel && !selecionado
-                              ? {
-                                  borderColor: 'brand.500',
-                                  color: 'brand.500',
-                                  boxShadow: '0 0 14px rgba(255,214,0,0.35)'
-                                }
+                              ? { borderColor: 'brand.500', color: 'brand.500', boxShadow: '0 0 14px rgba(255,214,0,0.35)' }
                               : {}
                           }
                           transition="all 0.18s ease"
@@ -178,14 +183,44 @@ export default function Agendamento() {
                   <>
                     <FormControl>
                       <FormLabel color="gray.400" fontSize="sm">Serviço</FormLabel>
-                      <Select value={servico} onChange={e => setServico(e.target.value)}
-                        {...inputStyle} size="lg">
-                        <option style={{ background: '#242424' }}>Corte</option>
-                        <option style={{ background: '#242424' }}>Barba</option>
-                        <option style={{ background: '#242424' }}>Corte + Barba</option>
-                        <option style={{ background: '#242424' }}>Sobrancelha</option>
-                      </Select>
+                      <Grid templateColumns="repeat(2, 1fr)" gap={3}>
+                        {SERVICOS.map(s => {
+                          const selecionado = servico === s.nome;
+                          return (
+                            <Box
+                              key={s.nome}
+                              onClick={() => setServico(s.nome)}
+                              cursor="pointer"
+                              bg={selecionado ? 'rgba(255,214,0,0.1)' : '#141414'}
+                              border="1px solid"
+                              borderColor={selecionado ? 'brand.500' : '#333'}
+                              borderRadius="xl"
+                              p={4}
+                              textAlign="center"
+                              transition="all 0.18s ease"
+                              _hover={{ borderColor: 'brand.500', bg: 'rgba(255,214,0,0.06)' }}
+                              boxShadow={selecionado ? '0 0 14px rgba(255,214,0,0.25)' : 'none'}
+                            >
+                              <Text color={selecionado ? 'brand.500' : 'white'} fontWeight="semibold" fontSize="sm" mb={1}>
+                                {s.nome}
+                              </Text>
+                              <Badge
+                                bg={selecionado ? 'brand.500' : '#242424'}
+                                color={selecionado ? 'black' : 'gray.400'}
+                                borderRadius="full"
+                                px={3}
+                                py={0.5}
+                                fontSize="sm"
+                                fontWeight="bold"
+                              >
+                                {s.preco}
+                              </Badge>
+                            </Box>
+                          );
+                        })}
+                      </Grid>
                     </FormControl>
+
                     <Button
                       onClick={handleAgendar}
                       bg="brand.500"
@@ -199,7 +234,7 @@ export default function Agendamento() {
                       _hover={{ bg: 'brand.400', boxShadow: '0 0 20px rgba(255,214,0,0.45)' }}
                       _disabled={{ opacity: 0.4, cursor: 'not-allowed', boxShadow: 'none' }}
                     >
-                      Confirmar Agendamento
+                      Confirmar — {servicoSelecionado?.preco}
                     </Button>
                   </>
                 )}
