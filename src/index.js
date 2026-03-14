@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import App from './App';
 
 const theme = extendTheme({
@@ -42,7 +43,9 @@ const theme = extendTheme({
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <ChakraProvider theme={theme}>
-    <App />
-  </ChakraProvider>
+  <GoogleOAuthProvider clientId="601696539112-1sj0k9gffuer3es8jbidtpa8l6dee9jk.apps.googleusercontent.com">
+    <ChakraProvider theme={theme}>
+      <App />
+    </ChakraProvider>
+  </GoogleOAuthProvider>
 );
