@@ -14,7 +14,7 @@
 
 | Recurso | URL |
 |---|---|
-| 🚀 Aplicação Web | https://web-production-e3626.up.railway.app |
+| 🚀 Aplicação Web | https://barber-booking-web.vercel.app |
 | 📚 API (Swagger) | https://barber-booking-api.up.railway.app/docs |
 
 ---
