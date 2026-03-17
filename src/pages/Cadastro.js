@@ -50,15 +50,30 @@ export default function Cadastro() {
   }
 
   const googleLogin = useGoogleLogin({
+    flow: 'implicit',
     onSuccess: async (tokenResponse) => {
-      const data = await api.post('/auth/google', { access_token: tokenResponse.access_token });
-      if (data.access_token) {
-        localStorage.setItem('token', data.access_token);
-        const me = await api.get('/auth/me', data.access_token);
-        if (me.role === 'admin') navigate('/barbeiro');
-        else navigate('/inicio');
-      } else {
-        toast({ title: extrairErro(data), status: 'error', duration: 3000, isClosable: true, position: 'top' });
+      try {
+        const userInfo = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+        }).then(r => r.json());
+
+        const data = await api.post('/auth/google-token', {
+          access_token: tokenResponse.access_token,
+          email: userInfo.email,
+          nome: userInfo.name,
+          google_id: userInfo.sub
+        });
+
+        if (data.access_token) {
+          localStorage.setItem('token', data.access_token);
+          const me = await api.get('/auth/me', data.access_token);
+          if (me.role === 'admin') navigate('/barbeiro');
+          else navigate('/inicio');
+        } else {
+          toast({ title: extrairErro(data), status: 'error', duration: 3000, isClosable: true, position: 'top' });
+        }
+      } catch {
+        toast({ title: 'Falha ao entrar com Google.', status: 'error', duration: 3000, isClosable: true, position: 'top' });
       }
     },
     onError: () => toast({ title: 'Falha ao entrar com Google.', status: 'error', duration: 3000, isClosable: true, position: 'top' }),
